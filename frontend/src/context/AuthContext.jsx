@@ -1,6 +1,5 @@
 import { createContext, useContext, useMemo, useState } from "react";
-import { api } from "../api";
-
+import { api } from "../services/api";
 const AuthContext = createContext(null);
 const STORAGE_KEY = "bank-ledger-user";
 

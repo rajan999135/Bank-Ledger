@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../api";
+import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
 export default function Dashboard() {
@@ -22,7 +22,7 @@ export default function Dashboard() {
           } catch {
             return [account._id, 0];
           }
-        })
+        }),
       );
 
       setBalances(Object.fromEntries(entries));
@@ -33,7 +33,7 @@ export default function Dashboard() {
 
   const total = useMemo(
     () => Object.values(balances).reduce((sum, value) => sum + value, 0),
-    [balances]
+    [balances],
   );
 
   return (

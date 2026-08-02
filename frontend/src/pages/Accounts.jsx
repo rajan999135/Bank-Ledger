@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api";
+import { api } from "../services/api";
 import Message from "../components/Message";
 
 export default function Accounts() {
@@ -25,7 +25,7 @@ export default function Accounts() {
           } catch {
             return [account._id, 0];
           }
-        })
+        }),
       );
 
       setBalances(Object.fromEntries(entries));
@@ -98,9 +98,7 @@ export default function Accounts() {
 
               <div className="account-card-balance">
                 <span>Available balance</span>
-                <strong>
-                  {(balances[account._id] || 0).toLocaleString()}
-                </strong>
+                <strong>{(balances[account._id] || 0).toLocaleString()}</strong>
                 <small>{account.currency || "INR"}</small>
               </div>
             </article>

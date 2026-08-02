@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api";
+import { api } from "../services/api";
 import Message from "../components/Message";
 
 function createKey() {
@@ -20,7 +20,8 @@ export default function Deposit() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api.getAccounts()
+    api
+      .getAccounts()
       .then((data) => {
         const list = data.accounts || [];
         setAccounts(list);
@@ -83,7 +84,9 @@ export default function Deposit() {
         <Message type="success">{message}</Message>
 
         {accounts.length === 0 ? (
-          <div className="empty-state">Create an account before depositing.</div>
+          <div className="empty-state">
+            Create an account before depositing.
+          </div>
         ) : (
           <form className="form-stack" onSubmit={submit}>
             <label className="field">
