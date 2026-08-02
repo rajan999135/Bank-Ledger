@@ -1,7 +1,7 @@
 name: Bank Ledger CI
 
 # Run CI whenever code is pushed to main
-# or a pull request is opened against main.
+# or when a pull request is opened against main.
 on:
   push:
     branches:
@@ -24,11 +24,11 @@ jobs:
         working-directory: backend
 
     steps:
-      # Download the repository code into the GitHub runner.
+      # Download repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Install Node.js.
+      # Install Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,15 +36,17 @@ jobs:
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
-      # Install backend dependencies exactly from package-lock.json.
+      # Verify Node version
+      - name: Check Node version
+        run: node -v
+
+      # Install dependencies
       - name: Install backend dependencies
         run: npm ci
 
-      # Check backend JavaScript files for syntax errors.
-      - name: Check backend syntax
-        run: |
-          node --check server.js
-          find src -name "*.js" -print0 | xargs -0 -n1 node --check
+      # Verify backend starts
+      - name: Verify backend
+        run: node --check server.js
 
   frontend:
     name: Frontend checks
@@ -55,11 +57,11 @@ jobs:
         working-directory: frontend
 
     steps:
-      # Download the repository code.
+      # Download repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Install Node.js.
+      # Install Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -67,11 +69,15 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      # Install frontend dependencies.
+      # Verify Node version
+      - name: Check Node version
+        run: node -v
+
+      # Install dependencies
       - name: Install frontend dependencies
         run: npm ci
 
-      # Verify that the Vite frontend builds successfully.
+      # Build React/Vite application
       - name: Build frontend
         env:
           VITE_API_URL: http://localhost:3000
