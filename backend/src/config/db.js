@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
 
-function connectToDb() {
-    mongoose
-        .connect(process.env.MONGO_URI)
-        .then(() => {
-            console.log("Server is connected to DB");
-        })
-        .catch((err) => {
-            console.error("Database connection error:", err.message);
-            process.exit(1);
-        });
+/**
+ * Connect the application to MongoDB.
+ */
+async function connectToDb() {
+  if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI is missing from backend/.env");
+  }
+
+  await mongoose.connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 10000,
+  });
+
+  console.log("MongoDB connected successfully");
 }
 
 module.exports = connectToDb;
