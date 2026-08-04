@@ -12,7 +12,8 @@ function getTokenFromRequest(req) {
         authorizationHeader &&
         authorizationHeader.startsWith("Bearer ")
     ) {
-        bearerToken = authorizationHeader.split(" ")[1];
+        // bearerToken = authorizationHeader.split(" ")[1];
+        bearerToken = authorizationHeader.substring(7);
     }
 
     return cookieToken || bearerToken;
