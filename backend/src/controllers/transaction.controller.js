@@ -452,16 +452,14 @@ async function createInitialFundsTransaction(req, res) {
          */
         await session.commitTransaction();
     } catch (error) {
-        /**
-         * Roll back all changes if anything fails
-         */
-        await session.abortTransaction();
+    await session.abortTransaction();
 
-        console.error("Initial funding error:", error);
+    console.error("Initial funding error");
+    console.error(error);
 
-        return res.status(500).json({
-            message: "Unable to add initial funds"
-        });
+    return res.status(500).json({
+        message: "Unable to add initial funds",
+    });
     } finally {
         /**
          * Always close the session
