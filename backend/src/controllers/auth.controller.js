@@ -127,6 +127,7 @@ async function userRegisterController(req, res) {
         return res.status(201).json({
             status: "success",
             message: "Registration successful.",
+            token, // Fallback for browsers that block the cross-site cookie.
             user: {
                 _id: user._id,
                 email: user.email,
@@ -204,6 +205,7 @@ async function userLoginController(req, res) {
         return res.status(200).json({
             status: "success",
             message: "Login successful.",
+            token,
             user: {
                 _id: user._id,
                 email: user.email,

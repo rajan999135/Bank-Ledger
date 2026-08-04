@@ -63,14 +63,30 @@ export function AuthProvider({ children }) {
     return data;
   }
 
+  // async function logout() {
+  //   try {
+  //     await api.logout();
+  //   } finally {
+  //     setUser(null);
+  //     saveUser(null);
+  //   }
+  // }
+
   async function logout() {
     try {
-      await api.logout();
+        await api.logout();
     } finally {
-      setUser(null);
-      saveUser(null);
+        sessionStorage.removeItem(
+            "bank-ledger-access-token"
+        );
+
+        sessionStorage.removeItem(
+            "bank-ledger-user"
+        );
+
+        setUser(null);
     }
-  }
+}
 
   const value = useMemo(
     () => ({
