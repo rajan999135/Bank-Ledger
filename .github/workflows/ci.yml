@@ -1,7 +1,8 @@
 name: Bank Ledger CI
 
-# Run CI whenever code is pushed to main
-# or when a pull request is opened against main.
+# Run checks:
+# 1. When a pull request targets main
+# 2. When a commit is pushed or merged into main
 on:
   push:
     branches:
@@ -24,11 +25,11 @@ jobs:
         working-directory: backend
 
     steps:
-      # Download repository
+      # Download the repository into the GitHub runner.
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Install Node.js
+      # Use the same major Node version as the project.
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,17 +37,22 @@ jobs:
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
-      # Verify Node version
-      - name: Check Node version
-        run: node -v
+      - name: Display Node version
+        run: node --version
 
-      # Install dependencies
+      # Install exact versions from package-lock.json.
       - name: Install backend dependencies
         run: npm ci
 
-      # Verify backend starts
-      - name: Verify backend
+      # Check the entry file.
+      - name: Check server syntax
         run: node --check server.js
+
+      # Check every JavaScript file inside backend/src.
+      - name: Check backend source syntax
+        run: |
+          find src -type f -name "*.js" -print0 |
+          xargs -0 -n1 node --check
 
   frontend:
     name: Frontend checks
@@ -57,11 +63,9 @@ jobs:
         working-directory: frontend
 
     steps:
-      # Download repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Install Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -69,16 +73,15 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      # Verify Node version
-      - name: Check Node version
-        run: node -v
+      - name: Display Node version
+        run: node --version
 
-      # Install dependencies
       - name: Install frontend dependencies
         run: npm ci
 
-      # Build React/Vite application
+      # Use the live API URL only for compiling the production frontend.
+      # This build does not send requests to the API.
       - name: Build frontend
         env:
-          VITE_API_URL: http://localhost:3000
+          VITE_API_URL: https://bank-ledger-api-nic1.onrender.com
         run: npm run build
